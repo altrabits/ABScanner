@@ -248,6 +248,7 @@ class Scanner:
         return result
 
     def scan_now(self):
+        print("Scanning...")
         self.disable_scan_button(True)
         self.clear_results()
         self.devices = set()
