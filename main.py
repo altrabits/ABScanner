@@ -109,6 +109,11 @@ class Scanner:
         if os.path.isfile(icon_path):
             logo = PhotoImage(file=icon_path)
             self.root.iconphoto(True, logo)
+        else:
+            # Load using PyInstaller
+            icon_path = self.resource_path(icon_path)
+            logo = PhotoImage(file=icon_path)
+            self.root.iconphoto(True, logo)
 
         window_width = 600
         window_height = 500
@@ -171,6 +176,13 @@ class Scanner:
         self.devices = set()
         self.stop_event = threading.Event()
         self.listener_thread = threading.Thread(target=self.listen_udp, daemon=True)
+
+    @staticmethod
+    def resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)
 
     def draw_window(self):
         self.root.mainloop()
